@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:background="#f00"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:text="春节"/>
+
+        <TextView
+            android:id="@+id/tv2"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:background="#f00"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:text="元宵节"/>
+
+        <TextView
+            android:id="@+id/tv3"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:background="#f00"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:text="清明节"/>
+
+        <TextView
+            android:id="@+id/tv4"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:background="#f00"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:text="端午节"/>
+
+        <TextView
+            android:id="@+id/tv5"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:background="#f00"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:text="七夕"/>
+
+        <TextView
+            android:id="@+id/tv6"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:background="#f00"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:text="中秋节"/>
+
+        <TextView
+            android:id="@+id/tv7"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:background="#f00"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:text="重阳节"/>
+
+        <TextView
+            android:id="@+id/tv8"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:background="#f00"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:text="国庆节"/>
+
+        <TextView
+            android:id="@+id/tv9"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:background="#f00"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:text="冬至"/>
+
+        <TextView
+            android:id="@+id/tv10"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:background="#f00"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:text="腊八节"/>
+
+        <ImageView
+            android:id="@+id/iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"/>
+    </LinearLayout>
+
+</ScrollView>
