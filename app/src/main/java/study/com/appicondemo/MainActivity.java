@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView tv8;
     private TextView tv9;
     private TextView tv10;
+    private PackageManager pm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,86 +56,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         initView();
-        httpGetIcon();
-    }
-
-    /**
-     * 初始化控件
-     */
-    private void initView() {
-        iv = (ImageView) findViewById(R.id.iv);
-
-        tv1 = (TextView) findViewById(R.id.tv1);
-        tv2 = (TextView) findViewById(R.id.tv2);
-        tv3 = (TextView) findViewById(R.id.tv3);
-        tv4 = (TextView) findViewById(R.id.tv4);
-        tv5 = (TextView) findViewById(R.id.tv5);
-        tv6 = (TextView) findViewById(R.id.tv6);
-        tv7 = (TextView) findViewById(R.id.tv7);
-        tv8 = (TextView) findViewById(R.id.tv8);
-        tv9 = (TextView) findViewById(R.id.tv9);
-        tv10 = (TextView) findViewById(R.id.tv10);
-
-        tv1.setOnClickListener(this);
-        tv2.setOnClickListener(this);
-        tv3.setOnClickListener(this);
-        tv4.setOnClickListener(this);
-        tv5.setOnClickListener(this);
-        tv6.setOnClickListener(this);
-        tv7.setOnClickListener(this);
-        tv8.setOnClickListener(this);
-        tv9.setOnClickListener(this);
-        tv10.setOnClickListener(this);
-    }
-
-    /**
-     * 网络请求，获取节日类型，显示对应的icon
-     */
-    private void httpGetIcon(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    URL url = new URL("http://testapp.guoss.cn/gssapi/server/api.do?method=get_icon_gss_api");
-                    URLConnection conn = url.openConnection();
-                    conn.setConnectTimeout(5 * 1000);
-                    conn.setDoInput(true);
-                    conn.connect();
-                    InputStream is = conn.getInputStream();
-                    InputStreamReader inputStreamReader = new InputStreamReader(is);
-                    BufferedReader reader = new BufferedReader(inputStreamReader);
-                    final StringBuffer resultBuffer = new StringBuffer();
-                    String tempLine = null;
-                    while ((tempLine = reader.readLine()) != null) {
-                        resultBuffer.append(tempLine);
-                    }
-                    Log.e("httpGetIcon", resultBuffer.toString());
-
-                    final String result = resultBuffer.toString();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                JSONObject object = new JSONObject(result);
-                                String data = object.optString("data");
-                                if (data.equals("default")){  //默认图片
-                                    switchIcon(0);
-                                } else if (data.equals("中秋节")){
-                                    switchIcon(6);
-                                } else if (data.equals("国庆节")){
-                                    switchIcon(8);
-                                }
-                                Toast.makeText(MainActivity.this, data, Toast.LENGTH_SHORT).show();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }).start();
     }
 
     @Override
@@ -195,6 +116,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //每次更换icon，app会自动关闭，用户体验的话，建议放在关闭应用的时候操作
+        //httpGetIcon();
+    }
+
+    /**
+     * 初始化控件
+     */
+    private void initView() {
+        iv = (ImageView) findViewById(R.id.iv);
+
+        tv1 = (TextView) findViewById(R.id.tv1);
+        tv2 = (TextView) findViewById(R.id.tv2);
+        tv3 = (TextView) findViewById(R.id.tv3);
+        tv4 = (TextView) findViewById(R.id.tv4);
+        tv5 = (TextView) findViewById(R.id.tv5);
+        tv6 = (TextView) findViewById(R.id.tv6);
+        tv7 = (TextView) findViewById(R.id.tv7);
+        tv8 = (TextView) findViewById(R.id.tv8);
+        tv9 = (TextView) findViewById(R.id.tv9);
+        tv10 = (TextView) findViewById(R.id.tv10);
+
+        tv1.setOnClickListener(this);
+        tv2.setOnClickListener(this);
+        tv3.setOnClickListener(this);
+        tv4.setOnClickListener(this);
+        tv5.setOnClickListener(this);
+        tv6.setOnClickListener(this);
+        tv7.setOnClickListener(this);
+        tv8.setOnClickListener(this);
+        tv9.setOnClickListener(this);
+        tv10.setOnClickListener(this);
+    }
+
     /**
      * @param useCode 哪个节日
      */
@@ -203,57 +160,119 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //当请求到要更改桌面图标时，我们就可以通过 PackageManager 对象提供的 setComponentEnabledSetting()方法关闭当前 Component 组件，
         //并启动别名对应的 Component 组件即可，为了使得图标能够快速更换，我们可以加上重启Luncher应用代码，name是自己定义个类名，记住一定要传全路径
         //①获取包资源管理器
-        PackageManager pm = getPackageManager();
-        //②关闭当前的组件（不显示）
-        pm.setComponentEnabledSetting(getComponentName(),
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+        pm = getPackageManager();
+
+        //②先隐藏所有:关闭当前的组件（不显示）
+        disableComponent(getComponentName());
+        disableComponent(new ComponentName(getBaseContext(), tag1));
+        disableComponent(new ComponentName(getBaseContext(), tag2));
+        disableComponent(new ComponentName(getBaseContext(), tag3));
+        disableComponent(new ComponentName(getBaseContext(), tag4));
+        disableComponent(new ComponentName(getBaseContext(), tag5));
+        disableComponent(new ComponentName(getBaseContext(), tag6));
+        disableComponent(new ComponentName(getBaseContext(), tag7));
+        disableComponent(new ComponentName(getBaseContext(), tag8));
+        disableComponent(new ComponentName(getBaseContext(), tag9));
+        disableComponent(new ComponentName(getBaseContext(), tag10));
+
         //③获取组件名称，根据清单中的name字段
-        ComponentName normalComponentName = null;
         //④正常图标新状态，此处使用用来修改清单文件中activity-alias下的android:enable的值
-        int normalNewState = PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
         switch (useCode){
             case 1:
-                normalComponentName = new ComponentName(getBaseContext(), tag1);
+                enableComponent(new ComponentName(getBaseContext(), tag1));
                 break;
             case 2:
-                normalComponentName = new ComponentName(getBaseContext(), tag2);
+                enableComponent(new ComponentName(getBaseContext(), tag2));
                 break;
             case 3:
-                normalComponentName = new ComponentName(getBaseContext(), tag3);
+                enableComponent(new ComponentName(getBaseContext(), tag3));
                 break;
             case 4:
-                normalComponentName = new ComponentName(getBaseContext(), tag4);
+                enableComponent(new ComponentName(getBaseContext(), tag4));
                 break;
             case 5:
-                normalComponentName = new ComponentName(getBaseContext(), tag5);
+                enableComponent(new ComponentName(getBaseContext(), tag5));
                 break;
             case 6:
-                normalComponentName = new ComponentName(getBaseContext(), tag6);
+                enableComponent(new ComponentName(getBaseContext(), tag6));
                 break;
             case 7:
-                normalComponentName = new ComponentName(getBaseContext(), tag7);
+                enableComponent(new ComponentName(getBaseContext(), tag7));
                 break;
             case 8:
-                normalComponentName = new ComponentName(getBaseContext(), tag8);
+                enableComponent(new ComponentName(getBaseContext(), tag8));
                 break;
             case 9:
-                normalComponentName = new ComponentName(getBaseContext(), tag9);
+                enableComponent(new ComponentName(getBaseContext(), tag9));
                 break;
             case 10:
-                normalComponentName = new ComponentName(getBaseContext(), tag10);
+                enableComponent(new ComponentName(getBaseContext(), tag10));
                 break;
             default:
-                normalComponentName = new ComponentName(getBaseContext(), tag0);
+                enableComponent(new ComponentName(getBaseContext(), tag10));
                 break;
         }
+    }
 
-        //⑤新状态跟当前状态不一样才执行
-        if (pm.getComponentEnabledSetting(normalComponentName) != normalNewState) {
-            //PackageManager.DONT_KILL_APP表示执行此方法时不杀死当前的APP进程
-            pm.setComponentEnabledSetting(
-                    normalComponentName,
-                    normalNewState,
-                    PackageManager.DONT_KILL_APP);
-        }
+    private void enableComponent(ComponentName componentName) {
+        pm.setComponentEnabledSetting(componentName,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
+    }
+
+    private void disableComponent(ComponentName componentName) {
+        pm.setComponentEnabledSetting(componentName,
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                PackageManager.DONT_KILL_APP);
+    }
+
+    /**
+     * 网络请求，获取节日类型，显示对应的icon
+     */
+    private void httpGetIcon(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    URL url = new URL("http://testapp.guoss.cn/gssapi/server/api.do?method=get_icon_gss_api");
+                    URLConnection conn = url.openConnection();
+                    conn.setConnectTimeout(5 * 1000);
+                    conn.setDoInput(true);
+                    conn.connect();
+                    InputStream is = conn.getInputStream();
+                    InputStreamReader inputStreamReader = new InputStreamReader(is);
+                    BufferedReader reader = new BufferedReader(inputStreamReader);
+                    final StringBuffer resultBuffer = new StringBuffer();
+                    String tempLine = null;
+                    while ((tempLine = reader.readLine()) != null) {
+                        resultBuffer.append(tempLine);
+                    }
+                    Log.e("httpGetIcon", resultBuffer.toString());
+
+                    final String result = resultBuffer.toString();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                JSONObject object = new JSONObject(result);
+                                String data = object.optString("data");
+                                if (data.equals("default")){  //默认图片
+                                    switchIcon(0);
+                                } else if (data.equals("2018ZQJ")){
+                                    switchIcon(6);
+                                } else if (data.equals("2018GQJ")){
+                                    switchIcon(8);
+                                }
+                                Toast.makeText(MainActivity.this, data, Toast.LENGTH_SHORT).show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }
